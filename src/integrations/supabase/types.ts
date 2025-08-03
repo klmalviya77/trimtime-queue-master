@@ -14,16 +14,283 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      barber_registration_requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          phone: string
+          services_offered: string
+          shop_address: string
+          shop_name: string
+          status: string | null
+          working_hours: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          phone: string
+          services_offered: string
+          shop_address: string
+          shop_name: string
+          status?: string | null
+          working_hours: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          services_offered?: string
+          shop_address?: string
+          shop_name?: string
+          status?: string | null
+          working_hours?: string
+        }
+        Relationships: []
+      }
+      barber_shops: {
+        Row: {
+          avg_service_duration: number | null
+          cover_image_url: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          latitude: number | null
+          longitude: number | null
+          max_queue_limit: number | null
+          rating_avg: number | null
+          services: Json | null
+          shop_address: string
+          shop_name: string
+          total_bookings: number | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string
+          working_hours: Json | null
+        }
+        Insert: {
+          avg_service_duration?: number | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          max_queue_limit?: number | null
+          rating_avg?: number | null
+          services?: Json | null
+          shop_address: string
+          shop_name: string
+          total_bookings?: number | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id: string
+          working_hours?: Json | null
+        }
+        Update: {
+          avg_service_duration?: number | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          max_queue_limit?: number | null
+          rating_avg?: number | null
+          services?: Json | null
+          shop_address?: string
+          shop_name?: string
+          total_bookings?: number | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string
+          working_hours?: Json | null
+        }
+        Relationships: []
+      }
+      bookings: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          estimated_wait_time: number | null
+          id: string
+          joined_at: string | null
+          queue_position: number | null
+          service_name: string
+          service_price: number | null
+          shop_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["booking_status"] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          estimated_wait_time?: number | null
+          id?: string
+          joined_at?: string | null
+          queue_position?: number | null
+          service_name: string
+          service_price?: number | null
+          shop_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          estimated_wait_time?: number | null
+          id?: string
+          joined_at?: string | null
+          queue_position?: number | null
+          service_name?: string
+          service_price?: number | null
+          shop_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "barber_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          shop_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          shop_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          shop_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "barber_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          booking_id: string | null
+          created_at: string | null
+          id: string
+          rating: number
+          review_text: string | null
+          shop_id: string
+          tags: string[] | null
+          user_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string | null
+          id?: string
+          rating: number
+          review_text?: string | null
+          shop_id: string
+          tags?: string[] | null
+          user_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string | null
+          id?: string
+          rating?: number
+          review_text?: string | null
+          shop_id?: string
+          tags?: string[] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "barber_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_queue_positions: {
+        Args: { shop_uuid: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      booking_status:
+        | "waiting"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+        | "no_show"
+      user_role: "customer" | "barber" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +417,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_status: [
+        "waiting",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
+      user_role: ["customer", "barber", "admin"],
+    },
   },
 } as const
