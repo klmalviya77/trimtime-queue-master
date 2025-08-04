@@ -64,8 +64,10 @@ const CustomerDashboard = () => {
 
     checkAuth();
 
-    // Get user location
-    if (navigator.geolocation) {
+    // Get user location only once
+    const locationRequested = localStorage.getItem('location_requested');
+    if (navigator.geolocation && !locationRequested) {
+      localStorage.setItem('location_requested', 'true');
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
@@ -75,12 +77,14 @@ const CustomerDashboard = () => {
         },
         (error) => {
           console.error("Location error:", error);
-          toast({
-            title: "Location Access",
-            description: "Please enable location access for better shop recommendations.",
-            variant: "destructive",
-          });
-        }
+          if (error.code === 1) {
+            toast({
+              title: "Location Access Denied",
+              description: "Location access was denied. You can still browse shops without location-based sorting.",
+            });
+          }
+        },
+        { timeout: 10000, maximumAge: 600000 }
       );
     }
   }, [navigate, toast]);

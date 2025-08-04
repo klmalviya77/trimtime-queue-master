@@ -12,12 +12,12 @@ const Index = () => {
   const handleRoleSelection = (role: 'customer' | 'barber') => {
     localStorage.setItem('selected_role', role);
     setSelectedRole(role);
-    
-    if (role === 'customer') {
-      navigate('/auth');
-    } else {
-      navigate('/barber-registration');
-    }
+    navigate('/auth');
+  };
+
+  const handleBarberRegistration = () => {
+    localStorage.setItem('selected_role', 'barber');
+    navigate('/barber-registration');
   };
 
   return (
@@ -205,7 +205,7 @@ const Index = () => {
               variant="outline" 
               size="xl"
               className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              onClick={() => handleRoleSelection('barber')}
+              onClick={handleBarberRegistration}
             >
               Register Your Shop
             </Button>
