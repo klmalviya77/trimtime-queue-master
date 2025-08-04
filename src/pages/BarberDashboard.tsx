@@ -132,28 +132,43 @@ const BarberDashboard = () => {
     if (!myShop) return;
 
     try {
-      const { data: bookings, error } = await supabase
+      // First get bookings
+      const { data: bookings, error: bookingsError } = await supabase
         .from('bookings')
-        .select(`
-          *,
-          profiles!inner (
-            name,
-            phone
-          )
-        `)
+        .select('*')
         .eq('shop_id', myShop.id)
         .in('status', ['waiting', 'in_progress'])
         .order('joined_at', { ascending: true });
 
-      if (error) throw error;
+      if (bookingsError) throw bookingsError;
 
-      const formattedBookings = bookings?.map(booking => ({
-        ...booking,
-        profiles: {
-          name: booking.profiles.name,
-          phone: booking.profiles.phone || '',
-        }
-      })) || [];
+      if (!bookings || bookings.length === 0) {
+        setCurrentQueue([]);
+        return;
+      }
+
+      // Get user IDs from bookings
+      const userIds = bookings.map(booking => booking.user_id);
+
+      // Get profiles for these users
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, name, phone')
+        .in('user_id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Combine bookings with profiles
+      const formattedBookings = bookings.map(booking => {
+        const profile = profiles?.find(p => p.user_id === booking.user_id);
+        return {
+          ...booking,
+          profiles: {
+            name: profile?.name || 'Unknown Customer',
+            phone: profile?.phone || '',
+          }
+        };
+      });
 
       setCurrentQueue(formattedBookings);
     } catch (error) {
