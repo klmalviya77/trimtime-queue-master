@@ -70,7 +70,9 @@ const Auth = () => {
       const role = localStorage.getItem('selected_role') || 'customer';
       const redirectUrl = `${window.location.origin}/`;
 
-      const { error } = await supabase.auth.signUp({
+      console.log('Starting sign up with:', { email: formData.email, role, redirectUrl });
+
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
         options: {
@@ -83,7 +85,10 @@ const Auth = () => {
         }
       });
 
+      console.log('Sign up response:', { data, error });
+
       if (error) {
+        console.error('Sign up error:', error);
         if (error.message.includes('User already registered')) {
           toast({
             title: "Account exists",
@@ -99,12 +104,14 @@ const Auth = () => {
           });
         }
       } else {
+        console.log('Sign up successful:', data);
         toast({
           title: "Check your email",
           description: "We've sent you a confirmation link to complete your registration.",
         });
       }
     } catch (error) {
+      console.error('Unexpected error during sign up:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
